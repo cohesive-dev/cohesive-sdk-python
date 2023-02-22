@@ -3,9 +3,9 @@ requires = ["flit"]
 build-backend = "flit.buildapi"
 
 [project]
-name =  "py-project-toml"
+name =  "CohesiveSDK"
 authors = [
-    {name = "Daniel Ciborowski", email = "dciborow@microsoft.com"},
+    {name = "Nam Nguyen", email = "nam@cohesiveapp.com"},
 ]
 description = "Sample Python Project for creating a new Python Module"
 readme = "README.md"
@@ -46,12 +46,12 @@ test = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/microsoft/python-package-template/tree/main#readme"
+Documentation = "https://docs.cohesiveapp.com"
 Source = "https://github.com/microsoft/python-package-template"
 Tracker = "https://github.com/microsoft/python-package-template/issues"
 
 [tool.flit.module]
-name = "python_package"
+name = "cohesive"
 
 [tool.bandit]
 exclude_dirs = ["build","dist","tests","scripts"]

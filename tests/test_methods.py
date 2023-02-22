@@ -4,29 +4,63 @@
 #   ---------------------------------------------------------------------------------
 """This is a sample python file for testing functions from the source code."""
 from __future__ import annotations
+from datetime import datetime, timezone
 
-from python_package.hello_world import hello_world
+from cohesive.client import SalesforceClient
+
+def testUpsertEventsForEmails1(
+  accessToken,
+  data,
+  mapping,
+  ownerEmail,
+  attendeeEmails
+):
+  """
+  This defines the expected usage, which can then be used in various test cases.
+  Pytest will not execute this code directly, since the function does not contain the suffex "test"
+  """
+  print("CHECK", attendeeEmails)
+  salesforceClient = SalesforceClient.initialize(
+    salesforceDomain='https://cohesive2-dev-ed.develop.my.salesforce.com'
+  )
+  owners = salesforceClient.getSalesforceUserFromEmail(accessToken=accessToken, email=ownerEmail)
+  owner = owners[0]
+  if (not owner):
+    raise Exception('Could not find Salesforce user with email ${email}')
+  contacts = salesforceClient.getSalesforceContactFromEmail(accessToken=accessToken)
+  attendeeContacts = [contact for contact in contacts if contact['Email'] and contact['Email'] in attendeeEmails] if contacts else []
+  eventIds = [salesforceClient.upsertSalesforceEvent(
+    accessToken=accessToken,
+    data={
+      **data,
+      "WhoId": contact['Id'],
+      "WhatId": contact['AccountId'],
+    },
+    mapping=mapping
+  ) for contact in attendeeContacts if contact['AccountId']]
+
+  print("TEST 1", eventIds)
 
 
-def hello_test():
-    """
-    This defines the expected usage, which can then be used in various test cases.
-    Pytest will not execute this code directly, since the function does not contain the suffex "test"
-    """
-    hello_world()
-
-
-def test_hello(unit_test_mocks: None):
-    """
-    This is a simple test, which can use a mock to override online functionality.
-    unit_test_mocks: Fixture located in conftest.py, implictly imported via pytest.
-    """
-    hello_test()
-
-
-def test_int_hello():
-    """
-    This test is marked implicitly as an integration test because the name contains "_init_"
-    https://docs.pytest.org/en/6.2.x/example/markers.html#automatically-adding-markers-based-on-test-names
-    """
-    hello_test()
+def testUpsertEventsForEmails2(
+  accessToken,
+  data,
+  mapping,
+  accountId,
+  attendeeEmails
+):
+  """
+  This is a simple test, which can use a mock to override online functionality.
+  unit_test_mocks: Fixture located in conftest.py, implictly imported via pytest.
+  """
+  salesforceClient = SalesforceClient.initialize(
+    salesforceDomain='https://cohesive2-dev-ed.develop.my.salesforce.com'
+  )
+  eventIds = salesforceClient.upsertSalesforceEventForEmails(
+    accessToken=accessToken,
+    ownerEmail=accountId,
+    attendeeEmails=attendeeEmails,
+    data=data,
+    mapping=mapping
+  )
+  print("TEST 2", eventIds)
