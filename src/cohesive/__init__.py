@@ -4,5 +4,6 @@
 #   -------------------------------------------------------------
 """Python Package Template"""
 from __future__ import annotations
+from .client import SalesforceClient
 
-__version__ = "0.0.3"
+__version__ = "0.0.1"

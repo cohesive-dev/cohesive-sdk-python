@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 
 from cohesive.client import SalesforceClient
 
+'''
 def testUpsertEventsForEmails1(
   accessToken,
   data,
@@ -19,7 +20,6 @@ def testUpsertEventsForEmails1(
   This defines the expected usage, which can then be used in various test cases.
   Pytest will not execute this code directly, since the function does not contain the suffex "test"
   """
-  print("CHECK", attendeeEmails)
   salesforceClient = SalesforceClient.initialize(
     salesforceDomain='https://cohesive2-dev-ed.develop.my.salesforce.com'
   )
@@ -40,7 +40,7 @@ def testUpsertEventsForEmails1(
   ) for contact in attendeeContacts if contact['AccountId']]
 
   print("TEST 1", eventIds)
-
+'''
 
 def testUpsertEventsForEmails2(
   accessToken,
@@ -56,10 +56,8 @@ def testUpsertEventsForEmails2(
   salesforceClient = SalesforceClient.initialize(
     salesforceDomain='https://cohesive2-dev-ed.develop.my.salesforce.com'
   )
-  eventIds = salesforceClient.upsertSalesforceEventForEmails(
+  eventIds = salesforceClient.createSalesforceEvent(
     accessToken=accessToken,
-    ownerEmail=accountId,
-    attendeeEmails=attendeeEmails,
     data=data,
     mapping=mapping
   )
