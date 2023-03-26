@@ -7,6 +7,7 @@ from __future__ import annotations
 from requests.models import PreparedRequest
 import requests
 import json
+import time
 
 from cohesive.util import buildSalesforceQuery, handleSalesforceApiError
 
@@ -118,6 +119,8 @@ class SalesforceClient:
         else:
           body[key] = data[key]
 
+    print(body)
+
     res = self.querySalesforce(
       endpoint="/sobjects/Event",
       method="POST",
@@ -193,22 +196,28 @@ class SalesforceClient:
 
   def upsertSalesforceEventForEmails(self, ownerEmail, attendeeEmails, accessToken, data, mapping=None):
     owners = self.getSalesforceUserFromEmail(accessToken=accessToken, email=ownerEmail)
-    owner = owners[0] if owners else None
+    owner = owners[0] if owners and len(owners) > 0 else None
     if not owner:
       raise Exception(f"Could not find Salesforce user with email {ownerEmail}")
     contacts = self.getSalesforceContactFromEmail(accessToken=accessToken)
-    attendeeContacts = [x for x in contacts if 'Email' in x and x['Email'] in attendeeEmails] if contacts else [];  
-    accountIdKey = ([x for x in data.keys() if mapping.get(x) == "WhatId"][0] or "WhatId") if mapping else "WhatId"
-    contactIdKey = [x for x in data.keys() if mapping.get(x) == "WhoId"][0] or "WhoId" if mapping else "WhoId"
-    eventIds = [self.upsertSalesforceEvent(
-      accessToken=accessToken,
-      data={
-        **data,
-        [accountIdKey]: x.get('accountId'),
-        [contactIdKey]: x.get('Id')
-      },
-      mapping=mapping
-    ) for x in attendeeContacts if x.get('accountId')]
+    attendeeContacts = [x for x in contacts if 'Email' in x and x['Email'] in attendeeEmails] if contacts else []
+    accountIdKeys = [x for x in data.keys() if mapping.get(x) == "WhatId"]
+    accountIdKey = accountIdKeys[0] if accountIdKeys and len(accountIdKeys) > 0 else "WhatId"
+    contactIdKeys = [x for x in data.keys() if mapping.get(x) == "WhoId"]
+    contactIdKey = contactIdKeys[0] if contactIdKeys and len(contactIdKeys) > 0 else "WhoId"
+    eventIds = []
+    for contact in attendeeContacts:
+      if 'AccountId' in contact:
+        eventPayload = data
+        eventPayload[accountIdKey] = contact.get('AccountId')
+        eventPayload[contactIdKey] = contact.get('Id')
+        eventIds.append(
+          self.upsertSalesforceEvent(
+            accessToken=accessToken,
+            data=eventPayload,
+            mapping=mapping
+          )
+        )
     return eventIds
 
 

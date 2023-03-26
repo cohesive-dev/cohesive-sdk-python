@@ -47,8 +47,8 @@ test = [
 
 [project.urls]
 Documentation = "https://docs.cohesiveapp.com"
-Source = "https://github.com/microsoft/python-package-template"
-Tracker = "https://github.com/microsoft/python-package-template/issues"
+Source = "https://github.com/cohesive-dev/cohesive-sdk-python"
+Tracker = "https://github.com/cohesive-dev/cohesive-sdk-python/issues"
 
 [tool.flit.module]
 name = "cohesive"

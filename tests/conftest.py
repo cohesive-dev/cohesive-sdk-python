@@ -33,33 +33,29 @@ def unit_test_mocks(monkeypatch: None):
 
 @pytest.fixture
 def accessToken():
-  return '00DDn00000BzCTS!AQQAQOTIcwG0EPiXOUlFlF7tUK5iEi7c4u07qHLpzM4UCrTr5hDlJEefUrhkIBo9t5yEuIc0XlUo.Nsuym3sDYEDSkWyFb5x'
+  return '00DDn00000BzCTS!AQQAQIFHZ6JCQOpKBJDBTGKY4FWr_6h2QRvN9W00iTX._G6c.6m4RXueFsT16ncmgF4QUa8FgolE4C9rIMNLUpfNLKl6Zj7B'
 
 @pytest.fixture
 def data():
   return {
-    "Owner Id": '005Dn000004oWGNIA2',
-    "Meeting Name": 'Test Meeting 2',
-    "Meeting Url": 'test.xyz',
+    "accountId": '005Dn000004oWGNIA2',
+    "Meeting Name": 'SFDC upstract demo check-in with Kevin & Nam',
+    "Meeting Url": 'zoom.com/kevin-cohesive-demo',
     "Meeting Date": datetime.now(timezone.utc).isoformat(),
-    "Meeting Summary": 'Test Summary',
-    "Sentiment": 'Very Positive',
-    "DurationInMinutes": 30,
-    "Attendee": None,
-    "Account": None
+    "Meeting Summary": 'Kevin demoed Cohesive to a lot of stakeholders and got their feedback',
+    "Sentiment": 'Overall a pretty positive meeting',
+    "DurationInMinutes": 45
   }
 
 @pytest.fixture
 def mapping():
   return {
-    "Owner Id": 'OwnerId',
+    "accountId": 'OwnerId',
     "Meeting Name": 'Subject',
     "Meeting Url": 'Description',
     "Meeting Date": 'ActivityDateTime',
     "Meeting Summary": 'Description',
-    "Sentiment": 'Description',
-    "Attendee": 'WhoId',
-    "Account": 'WhatId'
+    "Sentiment": 'Description'
   }
 
 @pytest.fixture
@@ -68,7 +64,8 @@ def ownerEmail():
 
 @pytest.fixture
 def accountId():
-  return '24ntn96@gmail.com'
+  #return '24ntn96@gmail.com'
+  return '0054K000003nx1VQAQ'
 
 @pytest.fixture
 def attendeeEmails():
